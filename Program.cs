@@ -1,4 +1,9 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using fastwebsite.Entities;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
