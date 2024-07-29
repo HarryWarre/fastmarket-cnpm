@@ -1,4 +1,5 @@
 ﻿using fastwebsite.Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -10,6 +11,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddDbContext<FastdbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Fastdb")));
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";  // Đảm bảo rằng đường dẫn này không bị vòng lặp
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+    });
+
 
 // Add session services
 builder.Services.AddSession(options =>
@@ -57,8 +67,10 @@ app.UseSession();
 app.UseRequestLocalization();
 
 // Use authentication and authorization middleware
+app.UseAuthentication();  // Thêm middleware xác thực nếu cần
 app.UseAuthorization();
 
+// Use custom middlewares
 app.UseMiddleware<AdminAuthMiddleware>();
 app.UseMiddleware<AuthenticationMiddleware>();
 
