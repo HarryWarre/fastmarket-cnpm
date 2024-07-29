@@ -1,0 +1,75 @@
+﻿@model fastwebsite.Entities.Product
+
+@{
+    ViewData["Title"] = "Tạo Sản Phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<form id="createProductForm" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label asp-for="ProductName" class="control-label">Tên Sản Phẩm</label>
+        <input type="text" name="ProductName" id="ProductName" asp-for="ProductName" class="form-control" />
+        <span asp-validation-for="ProductName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price" class="control-label">Giá</label>
+        <input type="text" name="Price" id="Price" asp-for="Price" class="form-control" step="0.01" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Img" class="control-label">Hình Ảnh</label>
+        <input type="text" name="Img" id="Img" asp-for="Img" class="form-control" />
+        <span asp-validation-for="Img" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Des" class="control-label">Mô Tả</label>
+        <textarea type="text" name="Des" id="Des" asp-for="Des" class="form-control"></textarea>
+        <span asp-validation-for="Des" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CateId" class="control-label">Danh Mục</label>
+        @Html.DropDownListFor(model => model.CateId, (SelectList)ViewBag.CategoryList, new { @class = "form-control" })
+        <span asp-validation-for="CateId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Tạo" class="btn btn-primary" />
+    </div>
+</form>
+
+<a href="@Url.Action("Index")" class="btn btn-secondary mt-3">Trở lại danh sách</a>
+
+<script>
+    document.getElementById('createProductForm').addEventListener('submit', function (e) {
+        // Log form HTML to console
+        console.log(document.getElementById('createProductForm').outerHTML);
+
+        // Optionally, you can send the HTML to the server via AJAX
+        fetch('/admin/products/log', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
+            body: JSON.stringify({ html: document.getElementById('createProductForm').outerHTML })
+        }).then(response => {
+            if (response.ok) {
+                console.log('Form HTML logged successfully');
+            } else {
+                console.log('Failed to log form HTML');
+            }
+        });
+    });
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

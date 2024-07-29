@@ -1,0 +1,88 @@
+﻿@model fastwebsite.Entities.Cart
+
+<h2>Xác nhận đơn hàng</h2>
+
+@if (Model == null || !Model.CartItems.Any())
+{
+    <p>Giỏ hàng của bạn đang trống.</p>
+}
+else
+{
+    <form id="checkoutForm" method="post" action="@Url.Action("ConfirmOrder", "Orders")">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th>Tổng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CartItems)
+                {
+                    <tr>
+                        <td>@item.Product!.ProductName</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Product.Price</td>
+                        <td>@item.Price</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-right">Tổng cộng</td>
+                    <td id="totalPrice">@Model.TotalPrice</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="form-group">
+            <label for="PaymentMethod">Phương thức thanh toán</label>
+            <select id="PaymentMethod" name="SelectedPaymentMethodId" class="form-control">
+                @if (ViewBag.PaymentMethods != null)
+                {
+                    @foreach (var paymentMethod in ViewBag.PaymentMethods as List<fastwebsite.Entities.TypePayment>)
+                    {
+                        <option value="@paymentMethod.TypePaymentId">@paymentMethod.PaymentMethod</option>
+                    }
+                }
+                else
+                {
+                    <option value="">Không có phương thức thanh toán nào</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="CouponCode">Mã coupon</label>
+            <input type="text" id="CouponCode" name="CouponCode" class="form-control" />
+            <button type="button" id="CheckCoupon" class="btn btn-secondary mt-2">Kiểm tra</button>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-success mt-2">Xác nhận đơn hàng</button>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary mt-2">Quay lại giỏ hàng</a>
+        </div>
+    </form>
+
+    <div id="CouponResult"></div>
+}
+<script>
+    document.getElementById('CheckCoupon').addEventListener('click', async function () {
+        const couponCode = document.getElementById('CouponCode').value;
+        const response = await fetch(`/Orders/CheckCoupon?code=${encodeURIComponent(couponCode)}`);
+        const result = await response.json();
+        const couponResult = document.getElementById('CouponResult');
+
+        if (result.valid) {
+            couponResult.innerHTML = `<p class="text-success">Coupon hợp lệ! Giảm giá: {result.discount}%</p>`;
+            // Optionally, apply the discount to the total price here
+            const totalPrice = parseFloat(document.getElementById('totalPrice').textContent);
+            const discountedPrice = totalPrice - (totalPrice * (result.discount / 100));
+            document.getElementById('totalPrice').textContent = discountedPrice.toFixed(2);
+        } else {
+            couponResult.innerHTML = `<p class="text-danger">Coupon không hợp lệ.</p>`;
+        }
+    });
+</script>

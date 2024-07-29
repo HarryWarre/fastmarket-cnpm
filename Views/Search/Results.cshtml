@@ -1,0 +1,33 @@
+﻿@model IEnumerable<fastwebsite.Entities.Product>
+
+@{
+    ViewData["Title"] = "Search Results";
+}
+
+<h2>Search Results</h2>
+
+@if (!Model.Any())
+{
+    <p>No products found matching your search criteria.</p>
+}
+else
+{
+    <ul>
+        <div class="row">
+            @foreach (var product in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="@product.Img" class="card-img-top" alt="@product.ProductName" />
+                        <div class="card-body">
+                            <h5 class="card-title">@product.ProductName</h5>
+                            <p class="card-text">@product.Des</p>
+                            <p class="card-text">Giá: @product.Price.ToString("C")</p>
+                            <a href="@Url.Action("ProductDetail", "Home", new { id = product.ProductId })" class="btn btn-primary">Xem Chi Tiết</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </ul>
+}

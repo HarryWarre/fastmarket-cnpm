@@ -1,0 +1,89 @@
+﻿@model fastwebsite.Entities.Order
+
+@{
+    ViewData["Title"] = "Edit Order State";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="OrderId" value="@Model.OrderId" readonly class="form-control" />
+            <div class="form-group">
+                <label asp-for="State" class="control-label">Trạng thái hiện tại: @Model.State</label>
+                
+                <select asp-for="State" class="form-control" name="state">
+                    <option value="Pending" @(Model.State == "Pending" ? "selected" : "")>Pending</option>
+                    <option value="Processing" @(Model.State == "Processing" ? "selected" : "")>Processing</option>
+                    <option value="Completed" @(Model.State == "Completed" ? "selected" : "")>Completed</option>
+                    <option value="Canceled" @(Model.State == "Canceled" ? "selected" : "")>Canceled</option>
+                </select>
+                <span asp-validation-for="State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+
+<h4>Order Details</h4>
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Account ID</dt>
+        <dd class="col-sm-10">@Model.AccountId</dd>
+
+        <dt class="col-sm-2">Total Price</dt>
+        <dd class="col-sm-10">@Model.TotalPrice</dd>
+
+        <dt class="col-sm-2">Order Date</dt>
+        <dd class="col-sm-10">@Model.OrderDate</dd>
+
+        <dt class="col-sm-2">State</dt>
+        <dd class="col-sm-10">@Model.State</dd>
+
+        <dt class="col-sm-2">Code Coupon</dt>
+        <dd class="col-sm-10">@Model.CodeCoupon</dd>
+
+        <dt class="col-sm-2">Type Payment</dt>
+        <dd class="col-sm-10">@Model.TypePayment</dd>
+    </dl>
+</div>
+
+<hr />
+
+<h4>Order Items</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderItems)
+        {
+            <tr>
+                <td>@item.Product?.ProductName</td>
+                <td>@item.Quantity</td>
+                <td>@item.Price</td>
+                <td>@(item.Quantity * item.Price)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a href="/Admin/Orders" class="btn btn-secondary mt-3">Trở lại danh sách</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

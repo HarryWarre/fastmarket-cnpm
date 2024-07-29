@@ -1,0 +1,53 @@
+﻿@model fastwebsite.Entities.Cart
+
+<h2>Giỏ hàng của bạn</h2>
+
+@if (Model == null || !Model.CartItems.Any())
+{
+    <p>Giỏ hàng của bạn đang trống.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Giá</th>
+                <th>Tổng</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr>
+                    <td>@item.Product!.ProductName</td>
+                    <td>
+                        <form method="post" action="@Url.Action("UpdateCart", "Carts")" style="display:inline;">
+                            <input type="number" name="quantity" value="@item.Quantity" min="1" />
+                            <input type="hidden" name="cartItemId" value="@item.CartItemId" />
+                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                        </form>
+                    </td>
+                    <td>@item.Product.Price</td>
+                    <td>@item.Price</td>
+                    <td>
+                        <form method="post" action="@Url.Action("RemoveFromCart", "Carts")" style="display:inline;">
+                            <input type="hidden" name="cartItemId" value="@item.CartItemId" />
+                            <button type="submit" class="btn btn-danger">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-right">Tổng cộng</td>
+                <td>@Model.TotalPrice</td>
+            </tr>
+        </tfoot>
+    </table>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Tiếp tục mua sắm</a>
+    <a href="@Url.Action("Checkout", "Orders")" class="btn btn-success">Thanh toán</a>
+}

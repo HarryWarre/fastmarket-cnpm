@@ -1,0 +1,8 @@
+﻿@model IEnumerable<fastwebsite.Entities.Category>
+
+<div class="dropdown-content">
+    @foreach (var category in Model)
+    {
+        <a href="@Url.Action("Category", "Home", new { id = category.CateId })">@category.Name</a>
+    }
+</div>

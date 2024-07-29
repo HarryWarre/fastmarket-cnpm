@@ -1,0 +1,43 @@
+﻿@model fastwebsite.Entities.Category
+
+@{
+    ViewData["Title"] = "Tạo Danh Mục";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<form id="createCategoryForm" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label for="name" class="control-label">Tên Danh Mục</label>
+        <input type="text" name="name" id="name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Tạo" class="btn btn-primary" />
+    </div>
+</form>
+
+<a href="@Url.Action("Index")" class="btn btn-secondary mt-3">Trở lại danh sách</a>
+
+<script>
+    document.getElementById('createCategoryForm').addEventListener('submit', function (e) {
+        // Log form HTML to console
+        console.log(document.getElementById('createCategoryForm').outerHTML);
+
+        // Optionally, you can send the HTML to the server via AJAX
+        fetch('/admin/categories/log', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
+            body: JSON.stringify({ html: document.getElementById('createCategoryForm').outerHTML })
+        }).then(response => {
+            if (response.ok) {
+                console.log('Form HTML logged successfully');
+            } else {
+                console.log('Failed to log form HTML');
+            }
+        });
+    });
+</script>

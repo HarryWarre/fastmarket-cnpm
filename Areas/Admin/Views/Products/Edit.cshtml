@@ -1,0 +1,71 @@
+﻿@model fastwebsite.Entities.Product
+
+@{
+    ViewData["Title"] = "Cập nhật sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+
+    <input name="ProductId" id="ProductName" type="hidden" asp-for="ProductId" value="@Model.ProductId"/>
+    <div class="form-group">
+        <label asp-for="ProductName">Product Name:</label>
+        <input type="text" name="ProductName" id="ProductName" asp-for="ProductName" class="form-control" value="@Model.ProductName" />
+        <span asp-validation-for="ProductName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Price">Price:</label>
+        <input type="text" name="Price" id="Price" asp-for="Price" class="form-control " value=" @Model.Price" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Img">Hình Ảnh</label>
+        <input type="text" name="Img" id="Img" asp-for="Img" class="form-control  " value=" @Model.Img" />
+        <span asp-validation-for="Img" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CateId" class="control-label">Danh mục</label>
+        @Html.DropDownListFor(model => model.CateId, (SelectList)ViewBag.CategoryList, new { @class = "form-control" })
+        <span asp-validation-for="CateId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Des">Mô Tả</label>
+        <input type="text" name="Des" id="Des" asp-for="Des" class="form-control" value="@Model.Des" />
+        <span asp-validation-for="Des" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Lưu" class="btn btn-primary" />
+    </div>
+</form>
+
+<a href="/Admin/Products" class="btn btn-secondary mt-3">Trở lại danh sách</a>
+<script>
+    document.getElementById('updateProductForm').addEventListener('submit', function (e) {
+        // Log form HTML to console
+        console.log(document.getElementById('updateProductForm').outerHTML);
+
+        // Optionally, you can send the HTML to the server via AJAX
+        fetch('/admin/products/log', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
+            body: JSON.stringify({ html: document.getElementById('updateProductForm').outerHTML })
+        }).then(response => {
+            if (response.ok) {
+                console.log('Form HTML logged successfully');
+            } else {
+                console.log('Failed to log form HTML');
+            }
+        });
+    });
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

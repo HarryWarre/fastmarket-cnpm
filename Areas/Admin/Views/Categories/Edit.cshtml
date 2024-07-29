@@ -1,0 +1,27 @@
+﻿@model fastwebsite.Entities.Category
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+    ViewData["Title"] = "Cập Nhật Danh Mục";
+}
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @* <label for="CateId">ID Danh Mục</label> *@
+        <input type="hidden" id="CateId" name="CateId" value="@Model.CateId" readonly class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Name">Tên Danh Mục</label>
+        <input type="text" id="Name" name="Name" value="@Model.Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Cập Nhật" class="btn btn-primary" />
+    </div>
+</form>
+
+<a href="@Url.Action("Index")" class="btn btn-secondary">Trở lại danh sách</a>

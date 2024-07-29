@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] Fastwebsite</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/fastwebsite.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <img src="~/images/Logo.png" alt="FastMart" />
+            </div>
+            <h1>FastMart</h1>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                    <li class="dropdown">
+                        <a>Danh mục</a>
+                        @await Component.InvokeAsync("CategoryMenu")
+                    </li>
+                    <li><a href="@Url.Action("ViewCart", "Carts")">Giỏ hàng</a></li>
+                    <li><a href="@Url.Action("Index", "Orders")">Đơn hàng</a></li>
+                </ul>
+            </nav>
+            <div class="search-bar">
+                <form asp-controller="Search" asp-action="Results" method="get" id="searchForm">
+                    <input type="text" name="name" placeholder="Search" oninput="submitOnEnter(event)" />
+                </form>
+
+                <button><i class="fas fa-search"></i></button>
+                @if (Context.Session.GetString("UserEmail") != null)
+                {
+                    <a href="#">Hello, @Context.Session.GetString("UserEmail")</a>
+                    <a href="@Url.Action("Logout", "Account")">Đăng Xuất</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Login", "Account")">Đăng Nhập</a>
+                    <a href="@Url.Action("Register", "Account")">Đăng Ký</a>
+                }
+            </div>
+        </div>
+    </header>
+    @if (ViewContext.RouteData.Values["controller"].ToString() == "Home" && ViewContext.RouteData.Values["action"].ToString() == "Index")
+    {
+        <div class="banner">
+            <img src="~/images/banner.jpg" alt="Quảng cáo" />
+        </div>
+    }
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h2>FastMart</h2>
+                <p>Siêu thị bán hàng trực tuyến, cung cấp các sản phẩm tiêu dùng, thực phẩm, và nhiều mặt hàng khác.</p>
+            </div>
+            <div class="footer-section links">
+                <h2>Liên kết</h2>
+                <ul>
+                    <li><a href="#">Về chúng tôi</a></li>
+                    <li><a href="#">Liên hệ</a></li>
+                    <li><a href="#">Điều khoản dịch vụ</a></li>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h2>Liên hệ</h2>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> 456 Đường ABC, TP. Hồ Chí Minh</li>
+                    <li><i class="fas fa-phone"></i> +84 123 456 789</li>
+                    <li><i class="fas fa-envelope"></i> info@fastmart.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 FastMart. Đã đăng ký bản quyền.
+        </div>
+    </footer>
+</body>
+</html>
+<script>
+    function submitOnEnter(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById('searchForm').submit();
+        }
+    }
+</script>

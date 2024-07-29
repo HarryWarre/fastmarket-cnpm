@@ -1,0 +1,59 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    var options = new[] { "", "Pending", "Processing", "Completed", "Cancelled" };
+    var selectedState = ViewBag.SelectedState as string;
+}
+
+<h2>Danh sách đơn hàng của bạn</h2>
+
+<div>
+    <label for="orderState">Lọc theo trạng thái đơn hàng: </label>
+    <select id="orderState" name="state" onchange="filterOrders()">
+        @foreach (var state in options)
+        {
+            var tagBuilder = new TagBuilder("option");
+            tagBuilder.Attributes["value"] = state;
+            tagBuilder.InnerHtml.Append(state == "" ? "Tất cả" : state);
+
+            if (state == selectedState)
+            {
+                tagBuilder.Attributes["selected"] = "selected";
+            }
+
+            @tagBuilder
+        }
+    </select>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Mã đơn hàng</th>
+            <th>Ngày đặt hàng</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+            <th>Chi tiết</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.OrderId</td>
+                <td>@order.OrderDate?.ToString("dd/MM/yyyy")</td>
+                <td>@order.TotalPrice</td>
+                <td>@order.State</td>
+                <td>
+                    <a href="@Url.Action("OrderDetail", new { id = order.OrderId })" class="btn btn-primary">Xem Chi Tiết</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    function filterOrders() {
+        var state = document.getElementById("orderState").value;
+        window.location.href = '@Url.Action("Index")' + '?state=' + state;
+    }
+</script>

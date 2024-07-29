@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        /* Custom styles for the sidebar */
+        .sidebar {
+            background-color: #f8f9fa; /* Light background */
+            padding-top: 20px; /* Add some padding at the top */
+            height: 100vh; /* Make sidebar take full height */
+            position: fixed; /* Fix sidebar to the left */
+        }
+
+            .sidebar .nav-link {
+                color: #000000; /* Black text */
+            }
+
+                .sidebar .nav-link.active {
+                    background-color: #007bff; /* Blue background for active tab */
+                    color: #ffffff; /* White text for active tab */
+                }
+
+                .sidebar .nav-link:hover {
+                    background-color: #0056b3; /* Darker blue on hover */
+                    color: #ffffff; /* White text on hover */
+                }
+
+        .sidebar-sticky {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+        }
+
+        /* Ensure the main content does not overlap with the sidebar */
+        .main-content {
+            margin-left: 200px; /* Adjust based on sidebar width */
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            @if (Context.Session.GetString("AdminEmail") != null)
+            {
+                <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                    <a class="navbar-brand" href="">
+                        FMarket
+                    </a>
+                    <div class="sidebar-sticky">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewData["Title"] == "Sản Phẩm" ? "active" : "")" href="@Url.Action("Index", "Products", new { area = "Admin" })">
+                                    Sản Phẩm
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewData["Title"] == "Danh Mục" ? "active" : "")" href="@Url.Action("Index", "Categories", new { area = "Admin" })">
+                                    Danh Mục
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewData["Title"] == "Đơn Hàng" ? "active" : "")" href="@Url.Action("Index", "Orders", new { area = "Admin" })">
+                                    Đơn Hàng
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    Logout
+                                </a>
+                                <form id="logout-form" action="@Url.Action("Logout", "Staff", new { area = "Admin" })" method="post" style="display: none;">
+                                    <input type="submit" value="Logout" style="display: none;" />
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            }
+
+            <main role="main" class="@(Context.Session.GetString("AdminEmail") != null ? "col-md-9 ml-sm-auto col-lg-10 px-4 main-content" : "col-md-12 main-content")">
+                <h1 class="page-header">@ViewData["Title"]</h1>
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script> *@
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

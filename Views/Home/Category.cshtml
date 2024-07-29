@@ -1,0 +1,26 @@
+﻿@model IEnumerable<fastwebsite.Entities.Product>
+
+@{
+    ViewData["Title"] = "Products in " + ViewBag.Category;
+}
+
+<h1>Danh Mục Sản Phẩm - @ViewBag.Category</h1>
+<div class="product-list">
+    <div class="row">
+
+    @foreach (var product in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="@product.Img" class="card-img-top" alt="@product.ProductName" />
+                <div class="card-body">
+                    <h5 class="card-title">@product.ProductName</h5>
+                    <p class="card-text">@product.Des</p>
+                    <p class="card-text">Giá: @product.Price.ToString("C")</p>
+                    <a href="@Url.Action("ProductDetail", new { id = product.ProductId })" class="btn btn-primary">Xem Chi Tiết</a>
+                </div>
+            </div>
+        </div>
+    }
+    </div>
+</div>
