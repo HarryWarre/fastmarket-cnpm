@@ -64,5 +64,63 @@ namespace fastwebsite.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
+        public IActionResult Index()
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var customer = _context.Customers.Find(userId.Value);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return View(customer);
+        }
+
+        [HttpGet]
+        public IActionResult Update()
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var customer = _context.Customers.Find(userId.Value);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return View(customer);
+        }
+
+        [HttpPost]
+        public IActionResult Update(Customer updatedCustomer)
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var customer = _context.Customers.Find(userId.Value);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            customer.Name = updatedCustomer.Name;
+            customer.Phone = updatedCustomer.Phone;
+            customer.Address = updatedCustomer.Address;
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
     }
 }
