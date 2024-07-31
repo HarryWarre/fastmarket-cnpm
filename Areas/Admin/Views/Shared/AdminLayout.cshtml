@@ -68,6 +68,11 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link @(ViewData["Title"] == "Mã giảm giá" ? "active" : "")" href="@Url.Action("Index", "Coupons", new { area = "Admin" })">
+                                    Mã giảm giá
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     Logout
                                 </a>

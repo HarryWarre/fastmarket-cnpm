@@ -1,0 +1,48 @@
+﻿@model IEnumerable<fastwebsite.Entities.Coupon>
+
+@{
+    ViewData["Title"] = "Mã giảm giá";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+
+<a href="@Url.Action("Create", "Coupons", new { area = "Admin" })" class="btn btn-primary mb-3">Create New Coupon</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpirationDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var coupon in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => coupon.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => coupon.Discount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => coupon.ExpirationDate)
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", "Coupons", new { id = coupon.CouponId, area = "Admin" })" class="btn btn-warning">Edit</a>
+
+                    <form action="@Url.Action("Delete", "Coupons", new { id = coupon.CouponId, area = "Admin" })" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="_method" value="DELETE" />
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa mã giảm giá này?');">Delete</button>
+                    </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,61 @@
+﻿@model fastwebsite.Entities.Coupon
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/AdminLayout.cshtml";
+}
+<form id="createCouponForm" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @* <label for="CateId">Code giảm giá</label> *@
+        <input type="hidden" id="CouponId" name="CouponId" value="@Model.CouponId" readonly class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="Name">Mã giảm giá</label>
+        <input type="text" id="Code" name="Code" value="@Model.Code" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Name">Phần trăm giảm giá</label>
+        <input type="number" id="Discount" name="Discount" value="@Model.Discount" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Name">Thời gian sử dụng</label>
+        <input type="date" id="ExpirationDate" name="ExpirationDate" value="@Model.ExpirationDate" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Cập Nhật" class="btn btn-primary" />
+    </div>
+</form>
+<script>
+    document.getElementById('updateCouponForm').addEventListener('submit', function (e) {
+        // Log form HTML to console
+        console.log(document.getElementById('updateCouponForm').outerHTML);
+
+        // Optionally, you can send the HTML to the server via AJAX
+        fetch('/admin/coupons/log', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
+            body: JSON.stringify({ html: document.getElementById('updateCouponForm').outerHTML })
+        }).then(response => {
+            if (response.ok) {
+                console.log('Form HTML logged successfully');
+            } else {
+                console.log('Failed to log form HTML');
+            }
+        });
+    });
+</script>
+<a href="@Url.Action("Index")" class="btn btn-secondary">Trở lại danh sách</a>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
